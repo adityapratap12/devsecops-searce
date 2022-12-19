@@ -10,7 +10,7 @@ phases:
       - curl -s -qL -o /usr/bin/jq https://stedolan.github.io/jq/download/linux64/jq
       - chmod +x /usr/bin/jq
       - yum -y update
-      - sudo yum install -y yum-utils
+      - yum install -y yum-utils
       # - yum install docker -y
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
