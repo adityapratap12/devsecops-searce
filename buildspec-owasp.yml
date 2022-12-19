@@ -10,7 +10,7 @@ phases:
       - curl -s -qL -o /usr/bin/jq https://stedolan.github.io/jq/download/linux64/jq
       - chmod +x /usr/bin/jq
       - yum -y update
-      - yum install docker -y
+      # - yum install docker -y
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2&
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
       # - echo Installing app dependencies and Kubectl tool for K8s...
@@ -38,8 +38,7 @@ phases:
       - docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py -t https://ads.asmadiya.com/ -c passive-scan.conf -J owaspresult.json 
   post_build:
     commands:
-      - ls -lrt $CODEBUILD_SRC_DIR
-      - cat owaspresult.json
+      - z.json
       # - |
       #   jq "{ \"messageType\": \"CodeScanReport\", \"reportType\": \"OWASP-Zap\", \"createdAt\": $(date +\"%Y-%m-%dT%H:%M:%S.%3NZ\"), \"source_repository\": \"$CODEBUILD_SOURCE_REPO_URL\", \"source_branch\": \"$CODEBUILD_SOURCE_VERSION\", \"build_id\": \"$CODEBUILD_BUILD_ID\", \"source_commitid\": \"$CODEBUILD_RESOLVED_SOURCE_VERSION\", \"report\": . }" owaspresult.json > payload.json
       #   aws lambda invoke --function-name ImpToSecurityHubEKS --payload file://payload.json owaspresult.json && echo "LAMBDA_SUCCEDED" || echo "LAMBDA_FAILED";
